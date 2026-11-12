@@ -1,0 +1,1 @@
+{"version": 1, "prepare": ["pnpm install --frozen-lockfile"], "programs": {"dev": "pnpm dev"}}

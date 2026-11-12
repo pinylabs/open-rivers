@@ -1,0 +1,26 @@
+---
+// The footer every story page shares: the sample notice, the credits of the photos the story shows, and the Pinies
+// who made the site.
+import { getChapters, getSettings } from '../lib/site.ts';
+
+const settings = await getSettings();
+const chapters = await getChapters();
+const credits = [settings.hero.photo, ...chapters.map((chapter) => chapter.data.photo)].map((photo) => photo.credit);
+---
+
+<footer>
+  <div class="mx-auto flex max-w-page flex-wrap justify-between gap-5 px-10 pt-9 pb-13.5 text-small text-neutral-600 dark:text-neutral-400">
+    <span>
+      {settings.sampleNote} Photos:
+      {credits.map((credit, i) => (
+        <>
+          <a class="hover:underline" href={credit.page}>{credit.name}</a>{i < credits.length - 1 ? ', ' : ''}
+        </>
+      ))} on Unsplash.
+    </span>
+    <span>
+      A Piny template preview. Made by the Pinies in
+      <a class="font-sans font-bold whitespace-nowrap text-neutral-800 hover:underline dark:text-neutral-200" href="https://piny.studio/home/"><img class="me-1 inline-block size-5 align-middle" src="/brand/piny-studio-mark.png" width="20" height="20" alt="" />Piny Studio</a>.
+    </span>
+  </div>
+</footer>

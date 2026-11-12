@@ -1,0 +1,32 @@
+---
+// The sample donate address: a placeholder that says where the real one is set. The template takes no payment.
+import Split from '../layouts/Split.astro';
+import { fill, getSettings, money } from '../lib/site.ts';
+import { getCollection } from 'astro:content';
+
+const settings = await getSettings();
+const amounts = await getCollection('amounts');
+const chosen = amounts.find((amount) => amount.data.chosen) ?? amounts[0];
+const amount = chosen ? money(settings.currency, chosen.data.value) : '';
+---
+
+<Split title="Donate" description="Where this site's donate address goes.">
+  <h1 class="rise font-sans text-display-sm leading-display font-black tracking-display max-md:text-title-md" data-thanks data-currency={settings.currency} data-once={settings.thanks.once} data-monthly={settings.thanks.monthly}>{fill(settings.thanks.once, amount)}</h1>
+  <div class="rise rounded-note border-3 border-dashed border-neutral-800 p-5.5 text-read leading-note dark:border-neutral-200" style="--i:1">
+    This is where your donate address goes: a Stripe Payment Link or your charity platform's page. Set it once as <code class="rounded-code bg-tertiary-400 px-1.5 py-px font-mono text-code text-primary-800">donateUrl</code> in <code class="rounded-code bg-tertiary-400 px-1.5 py-px font-mono text-code text-primary-800">src/content/settings.json</code>, and every Donate button opens it. The template itself takes no payment.
+  </div>
+  <a class="font-sans font-extrabold underline" href="/#give">← Back to the story</a>
+
+  <script is:inline>
+    // The gift the donate band chose, from ?amount=…&often=…, named in the thanks. With no script or no choice, the
+    // heading keeps the sample's words.
+    (() => {
+      const heading = document.querySelector('[data-thanks]');
+      const query = new URLSearchParams(location.search);
+      const value = Number(query.get('amount'));
+      const often = query.get('often') === 'monthly' ? 'monthly' : 'once';
+      if (!heading || !Number.isFinite(value) || value <= 0 || value > 1e7) return;
+      heading.textContent = (heading.dataset[often] || '').replaceAll('{amount}', heading.dataset.currency + value.toLocaleString('en-GB'));
+    })();
+  </script>
+</Split>

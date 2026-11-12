@@ -1,0 +1,31 @@
+---
+// Every page's document: its title, the two faces from Google Fonts and the one stylesheet.
+import '../styles/global.css';
+import { getSettings } from '../lib/site.ts';
+
+interface Props {
+  /** The page's own title; the home passes none and takes the site's. */
+  title?: string;
+  description?: string;
+}
+
+const settings = await getSettings();
+const { title, description = settings.description } = Astro.props;
+const fullTitle = title ? `${title} — ${settings.name}` : settings.title;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700..900&family=Literata:opsz,wght@7..72,400..600&display=swap" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

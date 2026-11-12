@@ -1,0 +1,169 @@
+/* Open Rivers' design tokens, the one file that sets the template's look. Every colour, face, size, radius, shadow and
+   measure the pages use is named here, and the markup reaches them only through Tailwind's utilities: change a value
+   here and every page follows. `static` keeps every token in the stylesheet, so a design panel can edit it live. */
+@theme static {
+  /* Tailwind's own palette, type scale and radii are replaced by Open Rivers', so nothing off-brand can slip in. */
+  --color-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+  --leading-*: initial;
+  --tracking-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --text-shadow-*: initial;
+  --container-*: initial;
+
+  /* The phone layout starts below 761px, where the design changes. */
+  --breakpoint-md: 47.5625rem;
+
+  /* Primary: river green. 800 is the numbers' band and every word on the lime; 950 is the band in the dark. */
+  --color-primary: #0e3b2e;
+  --color-primary-50: #ecf5f0;
+  --color-primary-100: #d3e8dd;
+  --color-primary-200: #a9d1bd;
+  --color-primary-300: #78b398;
+  --color-primary-400: #4d9374;
+  --color-primary-500: #2f7759;
+  --color-primary-600: #1f5f47;
+  --color-primary-700: #164c39;
+  --color-primary-800: #0e3b2e;
+  --color-primary-900: #0b2a21;
+  --color-primary-950: #06140f;
+
+  /* Secondary: the water. The river line and the chapters' kickers: 600 in the light, 400 in the dark. */
+  --color-secondary: #2b7a78;
+  --color-secondary-50: #effaf9;
+  --color-secondary-100: #d2f0ee;
+  --color-secondary-200: #a6e0dc;
+  --color-secondary-300: #78cbc6;
+  --color-secondary-400: #4fb3ad;
+  --color-secondary-500: #3a9792;
+  --color-secondary-600: #2b7a78;
+  --color-secondary-700: #256261;
+  --color-secondary-800: #214f4f;
+  --color-secondary-900: #1e4242;
+  --color-secondary-950: #0d2627;
+
+  /* Tertiary: lime, the donate band, its buttons and the big numbers (400). */
+  --color-tertiary: #c6f432;
+  --color-tertiary-50: #f9fee7;
+  --color-tertiary-100: #f1fccb;
+  --color-tertiary-200: #e3f99d;
+  --color-tertiary-300: #d3f765;
+  --color-tertiary-400: #c6f432;
+  --color-tertiary-500: #a6d915;
+  --color-tertiary-600: #81ae0c;
+  --color-tertiary-700: #61840f;
+  --color-tertiary-800: #4e6812;
+  --color-tertiary-900: #425814;
+  --color-tertiary-950: #223105;
+
+  /* Neutral: chalk and ink. Light pages use ground 100, rule 300, soft words 600 and ink 800; dark pages mirror them
+     with ink 200, soft words 400, rule 700 and ground 900. */
+  --color-neutral: #0f2a22;
+  --color-neutral-50: #f8f6f0;
+  --color-neutral-100: #f2efe6;
+  --color-neutral-200: #e8efe9;
+  --color-neutral-300: #d8d3c4;
+  --color-neutral-400: #9db3aa;
+  --color-neutral-500: #71857c;
+  --color-neutral-600: #4d6159;
+  --color-neutral-700: #1d3a30;
+  --color-neutral-800: #0f2a22;
+  --color-neutral-900: #0a1a15;
+  --color-neutral-950: #050e0b;
+
+  /* The words over the hero's photo and on the green band. */
+  --color-white: #fff;
+
+  /* Faces, loaded from Google Fonts by the layout: Epilogue at its heaviest for the headings and numbers, Literata
+     for the story. Code keeps the system's monospace. */
+  --font-sans: 'Epilogue', system-ui, sans-serif;
+  --font-serif: 'Literata', Georgia, serif;
+  --font-mono: ui-monospace, Menlo, monospace;
+
+  /* Type scale, by size. Each keeps the browser's normal line height; `leading-*` and `tracking-*` set a use's own. */
+  --text-small: 14px;
+  --text-small--line-height: normal;
+  --text-code: 15px;
+  --text-code--line-height: normal;
+  --text-ui: 16px;
+  --text-ui--line-height: normal;
+  --text-story-sm: 17px;
+  --text-story-sm--line-height: normal;
+  --text-read: 18px;
+  --text-read--line-height: normal;
+  --text-story: 20px;
+  --text-story--line-height: normal;
+  --text-lede: 22px;
+  --text-lede--line-height: normal;
+  --text-statement: 24px;
+  --text-statement--line-height: normal;
+  --text-figure-sm: 26px;
+  --text-figure-sm--line-height: normal;
+  --text-title-sm: 34px;
+  --text-title-sm--line-height: normal;
+  --text-title-md: 44px;
+  --text-title-md--line-height: normal;
+  --text-title-lg: 46px;
+  --text-title-lg--line-height: normal;
+  --text-title-xl: 52px;
+  --text-title-xl--line-height: normal;
+  --text-display-xs: 60px;
+  --text-display-xs--line-height: normal;
+  --text-display-sm: 72px;
+  --text-display-sm--line-height: normal;
+  --text-display-md: 76px;
+  --text-display-md--line-height: normal;
+  --text-display-lg: 84px;
+  --text-display-lg--line-height: normal;
+  --text-display-xl: 96px;
+  --text-display-xl--line-height: normal;
+  --text-display-2xl: 128px;
+  --text-display-2xl--line-height: normal;
+  --text-display-3xl: 220px;
+  --text-display-3xl--line-height: normal;
+
+  --leading-normal: normal;
+  --leading-stat: 0.85;
+  --leading-hero: 0.88;
+  --leading-display: 0.9;
+  --leading-title: 0.98;
+  --leading-lede: 1.45;
+  --leading-text: 1.5;
+  --leading-note: 1.55;
+  --leading-story: 1.6;
+
+  --tracking-stat: -0.06em;
+  --tracking-figure: -0.05em;
+  --tracking-hero: -0.045em;
+  --tracking-display: -0.04em;
+  --tracking-title: -0.03em;
+  --tracking-mark: -0.01em;
+  --tracking-cue: 0.12em;
+  --tracking-kicker: 0.14em;
+
+  /* Shapes: the pill of the buttons and the toggle, a gift's tile, the note on the donate page, a chapter's photo
+     and inline code. */
+  --radius-pill: 999px;
+  --radius-note: 12px;
+  --radius-tile: 10px;
+  --radius-photo: 6px;
+  --radius-code: 4px;
+
+  --shadow-float: 0 6px 24px rgb(0 0 0 / 0.2);
+  --text-shadow-mark: 0 1px 10px rgb(0 0 0 / 0.3);
+
+  /* Spacing follows Tailwind's 4px step; the one size that is not a step of it is the donate page's photo on a
+     phone. */
+  --spacing: 0.25rem;
+  --spacing-photo-band: 40vh;
+
+  /* Measures: the page, the hero's heading and its sentence. */
+  --container-page: 1240px;
+  --container-hero: 1000px;
+  --container-lede: 560px;
+
+  /* Motion: the one easing every glide shares. */
+  --ease-glide: cubic-bezier(0.2, 0.8, 0.2, 1);
+}

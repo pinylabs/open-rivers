@@ -1,0 +1,165 @@
+---
+// The campaign told as one story: the river, three chapters with their numbers between them, and the donate band.
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { chapterName, fill, getChapters, getSettings, money, photoUrl } from '../lib/site.ts';
+
+const settings = await getSettings();
+const { hero, give } = settings;
+const chapters = await Promise.all(
+  (await getChapters()).map(async (chapter) => ({ ...chapter.data, Text: (await render(chapter)).Content })),
+);
+const stats = (await getCollection('stats')).map((stat) => stat.data).sort((a, b) => a.order - b.order);
+const amounts = (await getCollection('amounts')).sort((a, b) => a.data.value - b.data.value);
+const chosen = amounts.find((amount) => amount.data.chosen) ?? amounts[0];
+
+// The hero's lines, with the highlighted word picked out in lime.
+const heroLines = hero.lines.map((line) => {
+  const at = hero.highlight ? line.indexOf(hero.highlight) : -1;
+  return at < 0 ? { before: line, word: '', after: '' } : { before: line.slice(0, at), word: hero.highlight, after: line.slice(at + hero.highlight.length) };
+});
+
+const giveWords = (often: 'once' | 'monthly', value: number) => fill(give.button[often], money(settings.currency, value));
+---
+
+<Base>
+  <header class="fixed inset-x-0 top-0 z-10">
+    <div class="wrap flex h-18.5 items-center justify-between">
+      <a class="font-sans text-story font-black tracking-mark text-white text-shadow-mark" href="/">{settings.name.toUpperCase()}</a>
+      <a class="button rounded-pill bg-tertiary-400 px-5 py-3 font-sans font-extrabold text-primary-800 shadow-float" href={settings.donateUrl}>Donate</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="relative isolate h-screen min-h-160 overflow-hidden text-white">
+      <img class="absolute inset-0 -z-2 size-full object-cover" src={photoUrl(hero.photo.id, 2400)} width="2400" height="1600" alt={hero.photo.alt} fetchpriority="high" />
+      <div class="absolute inset-0 -z-1 bg-linear-to-b from-primary-950/25 via-primary-950/10 via-40% to-primary-950/75"></div>
+      <div class="wrap flex h-full flex-col justify-end pb-22.5">
+        <h1 class="max-w-hero font-sans text-display-2xl leading-hero font-black tracking-hero max-md:text-display-xs">
+          {heroLines.map((line, i) => (
+            <span class="rise block" style={`--i:${i}`}>{line.before}{line.word && <em class="text-tertiary-400 not-italic">{line.word}</em>}{line.after}</span>
+          ))}
+        </h1>
+        <p class="rise mt-5.5 max-w-lede text-lede leading-lede max-md:text-read" style={`--i:${heroLines.length}`}>{hero.text}</p>
+        <p class="rise mt-5.5 max-w-lede font-sans text-lede leading-lede font-bold tracking-cue uppercase max-md:text-read" style={`--i:${heroLines.length + 1}`}>{hero.cue}</p>
+      </div>
+    </section>
+
+    <div class="relative" id="story">
+      <div class="riverline pointer-events-none absolute inset-y-0 left-1/2 z-0 w-30 -translate-x-1/2 max-md:left-4.5 max-md:w-10 max-md:translate-x-0" aria-hidden="true">
+        <svg class="size-full" viewBox="0 0 120 1000" preserveAspectRatio="none"><path pathLength="1" d="M60 0 C 110 120, 10 220, 60 340 S 110 560, 50 680 S 20 880, 60 1000" /></svg>
+      </div>
+
+      {chapters.map((chapter) => {
+        const after = stats.filter((stat) => stat.afterChapter === chapter.number);
+        const wide = after.filter((stat) => stat.band === 'wide');
+        const row = after.filter((stat) => stat.band === 'row');
+        return (
+          <>
+            <div class="wrap">
+              <section class="relative z-1 grid grid-cols-2 items-center gap-30 py-35 max-md:grid-cols-1 max-md:gap-7 max-md:py-17.5 max-md:pl-8.5" id={`chapter-${chapter.number}`}>
+                <figure class:list={['reveal aspect-4/5 overflow-hidden rounded-photo', chapter.number % 2 === 0 && 'order-2 max-md:order-none']}>
+                  <img class="block size-full object-cover" loading="lazy" src={photoUrl(chapter.photo.id, 1200)} width="1200" height="1500" alt={chapter.photo.alt} />
+                </figure>
+                <div class="reveal">
+                  <p class="font-sans text-small leading-story font-extrabold tracking-kicker text-secondary-600 uppercase dark:text-secondary-400">{chapterName(chapter.number)} · {chapter.kicker}</p>
+                  <h2 class="mt-3.5 mb-5 font-sans text-title-xl leading-title font-black tracking-title max-md:text-title-sm">{chapter.heading}</h2>
+                  <div class="space-y-4 text-story leading-story text-neutral-600 max-md:text-story-sm dark:text-neutral-400"><chapter.Text /></div>
+                </div>
+              </section>
+            </div>
+            {wide.map((stat) => (
+              <section class="relative z-1 bg-primary-800 py-27.5 text-center text-white dark:bg-primary-950">
+                <div class="font-sans text-display-3xl leading-stat font-black tracking-stat text-tertiary-400 tabular-nums max-md:text-display-xl" data-count={stat.value} data-unit={stat.unit}>{stat.value.toLocaleString('en-GB')}{stat.unit}</div>
+                <p class="mt-4 text-statement max-md:text-read">{stat.label}</p>
+              </section>
+            ))}
+            {row.length > 0 && (
+              <div class="relative z-1 grid grid-cols-3 border-y-2 border-neutral-800 bg-neutral-100 max-md:grid-cols-1 dark:border-neutral-200 dark:bg-neutral-900">
+                {row.map((stat) => (
+                  <div class="reveal border-l-2 border-neutral-800 px-7.5 py-11.5 first:border-l-0 max-md:border-t-2 max-md:border-l-0 dark:border-neutral-200">
+                    <b class="block font-sans text-display-lg leading-display font-black tracking-figure max-md:text-display-xs" data-count={stat.value} data-unit={stat.unit}>{stat.value.toLocaleString('en-GB')}{stat.unit}</b>
+                    <span class="text-read text-neutral-600 dark:text-neutral-400">{stat.label}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        );
+      })}
+    </div>
+
+    <section class="relative z-1 bg-tertiary-400 py-27.5 text-primary-800" id="give" aria-labelledby="give-heading">
+      <div class="wrap grid grid-cols-2 items-center gap-15 max-md:grid-cols-1">
+        <div>
+          <h2 class="font-sans text-display-md leading-display font-black tracking-display max-md:text-title-lg" id="give-heading">{give.heading}</h2>
+          <p class="mt-4.5 text-story leading-text">{give.text}</p>
+        </div>
+        <div class="grid grid-cols-3 gap-3" data-give data-currency={settings.currency} data-once={give.button.once} data-monthly={give.button.monthly}>
+          <fieldset class="col-span-full grid min-w-0 grid-cols-2 rounded-pill border-3 border-primary-800 p-1 text-center font-sans text-ui font-extrabold">
+            <legend class="sr-only">How often</legend>
+            {(['once', 'monthly'] as const).map((often) => (
+              <label class="cursor-pointer rounded-pill p-2.5 has-checked:bg-primary-800 has-checked:text-tertiary-400 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary-800">
+                <input class="sr-only" type="radio" name="often" value={often} checked={often === settings.often} />{give[often]}
+              </label>
+            ))}
+          </fieldset>
+          <fieldset class="col-span-full grid min-w-0 grid-cols-3 gap-3">
+            <legend class="sr-only">Amount</legend>
+            {amounts.map((amount) => (
+              <label class="cursor-pointer rounded-tile border-3 border-primary-800 px-3.5 py-5 text-center font-sans text-title-sm font-black has-checked:bg-primary-800 has-checked:text-tertiary-400 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary-800 max-md:text-figure-sm">
+                <input class="sr-only" type="radio" name="amount" value={amount.data.value} checked={amount.id === chosen?.id} />{money(settings.currency, amount.data.value)}
+                <small class="mt-1.5 block font-serif text-small font-normal">{amount.data.buys}</small>
+              </label>
+            ))}
+          </fieldset>
+          <a class="button col-span-full rounded-tile border-3 border-primary-800 bg-primary-800 p-5 text-center font-sans text-statement font-black text-tertiary-400" href={settings.donateUrl} data-go>{chosen && giveWords(settings.often, chosen.data.value)}</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+
+  <script is:inline>
+    // The donate band: the Once/Monthly choice and the amount change the button's words and add ?amount=…&often=… to
+    // the donate address. With no script the button simply goes to the address.
+    (() => {
+      const band = document.querySelector('[data-give]');
+      const go = band && band.querySelector('[data-go]');
+      if (!go) return;
+      const address = go.getAttribute('href');
+      const update = () => {
+        const amount = band.querySelector('input[name=amount]:checked');
+        const often = band.querySelector('input[name=often]:checked');
+        if (!amount || !often) return;
+        const words = band.dataset[often.value] || '';
+        const value = Number(amount.value);
+        go.textContent = words.replaceAll('{amount}', band.dataset.currency + value.toLocaleString('en-GB'));
+        const url = new URL(address, location.href);
+        url.searchParams.set('amount', String(value));
+        url.searchParams.set('often', often.value);
+        go.href = url.origin === location.origin ? url.pathname + url.search + url.hash : url.href;
+      };
+      band.addEventListener('change', update);
+      update();
+    })();
+
+    // The numbers count up once, as they arrive; reduced motion or a still shows them as written.
+    (() => {
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.classList.contains('still');
+      if (still || !('IntersectionObserver' in window)) return;
+      const seen = new IntersectionObserver(entries => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting || document.documentElement.classList.contains('still')) continue;
+          seen.unobserve(entry.target);
+          const el = entry.target, target = Number(el.dataset.count), unit = el.dataset.unit || '', start = performance.now();
+          const step = now => { const t = Math.min(1, (now - start) / 1400), v = Math.round(target * (1 - (1 - t) ** 3)); el.textContent = v.toLocaleString('en-GB') + unit; if (t < 1) requestAnimationFrame(step); };
+          requestAnimationFrame(step);
+        }
+      }, { threshold: .6 });
+      document.querySelectorAll('[data-count]').forEach(el => seen.observe(el));
+    })();
+  </script>
+</Base>

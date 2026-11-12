@@ -1,0 +1,5 @@
+[
+  { "id": "kit", "value": 10, "buys": "A volunteer's kit" },
+  { "id": "skip", "value": 25, "buys": "A clean-up's skip", "chosen": true },
+  { "id": "net", "value": 50, "buys": "A drain's net" }
+]

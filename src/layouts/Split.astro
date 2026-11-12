@@ -1,0 +1,25 @@
+---
+// A short page beside the river: the hero's photo on one half and the words on the other, as the donate page draws it.
+import Base from './Base.astro';
+import { getSettings, photoUrl } from '../lib/site.ts';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const settings = await getSettings();
+const { photo } = settings.hero;
+---
+
+<Base title={Astro.props.title} description={Astro.props.description}>
+  <div class="grid min-h-screen grid-cols-2 max-md:grid-cols-1">
+    <figure class="vt-hero overflow-hidden max-md:h-photo-band">
+      <img class="block size-full object-cover" src={photoUrl(photo.id, 1400)} width="1400" height="1750" alt={photo.alt} />
+    </figure>
+    <main class="flex flex-col justify-center gap-5.5 px-17.5 py-22.5 max-md:px-4.5 max-md:py-9">
+      <a class="font-sans text-story font-black" href="/">{settings.name.toUpperCase()}</a>
+      <slot />
+    </main>
+  </div>
+</Base>

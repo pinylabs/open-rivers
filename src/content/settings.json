@@ -1,0 +1,34 @@
+{
+  "site": {
+    "name": "Open Rivers",
+    "title": "Open Rivers — bring the Wend back",
+    "description": "Forty-one miles of river, from the moor to the sea, and how a town is bringing it back.",
+    "donateUrl": "/donate/",
+    "currency": "£",
+    "often": "monthly",
+    "sampleNote": "Open Rivers is a template's sample campaign; its numbers are sample content.",
+    "hero": {
+      "lines": ["Bring the", "Wend back."],
+      "highlight": "Wend",
+      "text": "Forty-one miles of river, from the moor to the sea. Three years ago you couldn't swim in any of it. This is how a town is changing that.",
+      "cue": "Read the story ↓",
+      "photo": {
+        "id": "photo-1675725594605-c864c831d4da",
+        "alt": "The river Wend running through woodland",
+        "credit": {
+          "name": "Paulo Silva",
+          "profile": "https://unsplash.com/@pauloalbertosilva",
+          "page": "https://unsplash.com/photos/a-river-running-through-a-forest-filled-with-lots-of-trees-T79k0zdkR1A"
+        }
+      }
+    },
+    "give": {
+      "heading": "Give the river a hand.",
+      "text": "£10 buys a volunteer's kit. £50 nets a storm drain for a year. Every gift is spent on the Wend, and we publish where it goes.",
+      "once": "Once",
+      "monthly": "Monthly",
+      "button": { "once": "Give {amount} →", "monthly": "Give {amount} a month →" }
+    },
+    "thanks": { "once": "Thank you for giving {amount}.", "monthly": "Thank you for giving {amount} a month." }
+  }
+}

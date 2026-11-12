@@ -1,0 +1,6 @@
+[
+  { "id": "rubbish", "order": 1, "value": 4180, "unit": " kg", "label": "of rubbish lifted out of the Wend since the first clean-up.", "band": "wide", "afterChapter": 1 },
+  { "id": "volunteers", "order": 2, "value": 312, "label": "volunteers this year", "band": "row", "afterChapter": 2 },
+  { "id": "clean-ups", "order": 3, "value": 41, "label": "clean-ups since 2023", "band": "row", "afterChapter": 2 },
+  { "id": "drains", "order": 4, "value": 9, "label": "storm drains fitted with nets", "band": "row", "afterChapter": 2 }
+]
